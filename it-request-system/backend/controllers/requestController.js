@@ -52,7 +52,7 @@ const submitRequest = async (req, res) => {
 };
 
 const handleApproval = async (req, res) => {
-  const { id, type, status } = req.query;
+  const { id, type, status, comment } = req.query;
 
   try {
     const request = await Request.findByPk(id);
@@ -99,9 +99,10 @@ const handleApproval = async (req, res) => {
       return res.status(400).send("ED must approve before HR for Printer requests");
     }
 
-    // Update the request status and mark as actioned via email
+    // Update the request status, comment and mark as actioned via email
     const updateData = {
-      [`status_${type}`]: status
+      [`status_${type}`]: status,
+      [`comments_${type}`]: comment || ''
     };
 
     // Update the request
@@ -163,6 +164,12 @@ const handleApproval = async (req, res) => {
             <strong>${type=="ed"?"Plant Head":type.toUpperCase()}</strong> has 
             ${status === "approved" ? "approved" : "rejected"} the request.
           </p>
+          ${comment ? `
+          <div style="margin-top: 20px; padding: 15px; background-color: #f8f9fa; border-radius: 8px;">
+            <p style="font-size: 14px; color: #666; margin-bottom: 5px;">Comment:</p>
+            <p style="font-size: 15px; color: #333;">${comment}</p>
+          </div>
+          ` : ''}
           <div style="margin-top: 30px;">
             <p style="font-size: 14px; color: #777;">Request ID:</p>
             <p style="font-weight: 500; color: #333; font-size: 18px;">${id}</p>
@@ -313,10 +320,27 @@ const getUserRequestHistory = async (req, res) => {
   }
 };
 
+const getRequestById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const request = await Request.findByPk(id);
+    
+    if (!request) {
+      return res.status(404).json({ error: "Request not found" });
+    }
+
+    res.json(request);
+  } catch (err) {
+    console.error("Error in getRequestById:", err);
+    res.status(500).json({ error: "Failed to fetch request" });
+  }
+};
+
 module.exports = { 
   submitRequest, 
   handleApproval, 
   getAllRequests,
   updateRequestStatus,
-  getUserRequestHistory
+  getUserRequestHistory,
+  getRequestById
 };

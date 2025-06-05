@@ -177,7 +177,7 @@ document.addEventListener('DOMContentLoaded', function() {
     "Medical": "saroj.pujari@jindalpower.com",
     "Corporate HR": "ashish.kumar1@jindalpower.com",
     "CSR": "rishikesh.sharma@jindalpower.com",
-    "Information Technology": "naveenrathi556@gmail.com",
+    "Information Technology": "shivanshrawat2003@gmail.com",
     "MM&C": "rudraprasad.misra@jindalpower.com",
     "EHS": "shiv.singh@jindalpower.com",
     "Solar, Mechanical Project, Civil, Plant Horticulture": "krishnendu.chattopadhyay@jindalpower.com",

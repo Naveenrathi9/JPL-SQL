@@ -333,15 +333,25 @@ button[type="submit"]:active {
     font-size: 0.875rem;
     font-weight: 500;
     display: none;
-    background-color: rgba(231, 76, 60, 0.2);
     color: white;
-    border: 1px solid rgba(231, 76, 60, 0.3);
     backdrop-filter: blur(5px);
     -webkit-backdrop-filter: blur(5px);
 }
 
 .error-message.show {
     display: block;
+}
+
+/* Error state */
+.error-message[style*="color: red"] {
+    background-color: rgba(231, 76, 60, 0.2);
+    border: 1px solid rgba(231, 76, 60, 0.3);
+}
+
+/* Success state */
+.error-message[style*="color: green"] {
+    background-color: rgba(193, 245, 214, 0.101);
+    border: 1px solid rgba(39, 174, 96, 0.3);
 }
 
 /* Login Footer */

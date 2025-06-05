@@ -14,6 +14,7 @@ console.log('Controller functions:', {
 router.post('/submit', authMiddleware, requestController.submitRequest);
 router.get('/approve', requestController.handleApproval);
 router.get('/requests', requestController.getAllRequests);
+router.get('/request/:id', requestController.getRequestById);
 router.put('/requests/:id/status', requestController.updateRequestStatus);
 
 router.get('/requests/history', authMiddleware, requestController.getUserRequestHistory);

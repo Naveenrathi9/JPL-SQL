@@ -24,12 +24,12 @@ const Request = sequelize.define('Request', {
     allowNull: false
   },
   username: DataTypes.STRING,
- status_hod: {
+  status_hod: {
     type: DataTypes.STRING,
     defaultValue: 'pending'
   },
 
-   status_ed: {
+  status_ed: {
     type: DataTypes.STRING,
     defaultValue: 'pending'
   },
@@ -38,7 +38,6 @@ const Request = sequelize.define('Request', {
     type: DataTypes.STRING,
     defaultValue: 'pending'
   },
- 
  
   status_ithod: {
     type: DataTypes.STRING,
@@ -54,6 +53,10 @@ const Request = sequelize.define('Request', {
     defaultValue: ''
   },
   comments_ithod: {
+    type: DataTypes.STRING,
+    defaultValue: ''
+  },
+  comments_ed: {
     type: DataTypes.STRING,
     defaultValue: ''
   },

@@ -24,7 +24,7 @@ document.addEventListener("DOMContentLoaded", function () {
   { "username": "saroj.pujari@jindalpower.com", "password": "Saroj@2025" },
   { "username": "ashish.kumar1@jindalpower.com", "password": "Ashish@2025" },
   { "username": "rishikesh.sharma@jindalpower.com", "password": "Rishikesh@2025" },
-  { "username": "naveenrathi556@gmail.com", "password": "111" },
+  { "username": "shivanshrawat2003@gmail.com", "password": "1" },
   { "username": "rudraprasad.misra@jindalpower.com", "password": "Rudraprasad@2025" },
   { "username": "shiv.singh@jindalpower.com", "password": "Shiv@2025" },
   { "username": "krishnendu.chattopadhyay@jindalpower.com", "password": "Krishnendu@2025" },

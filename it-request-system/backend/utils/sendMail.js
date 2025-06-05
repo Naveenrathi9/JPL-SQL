@@ -34,13 +34,11 @@ const generateMailHTML = (requestData, requestId, approverType) => {
   const isActioned = actionedViaEmail?.[approverType.toLowerCase()] ||
     statusValue !== "pending";
 
-  const links = {
-    approve: `${process.env.CLIENT_URL}/api/approve?id=${requestId}&type=${approverType.toLowerCase()}&status=approved`,
-    reject: `${process.env.CLIENT_URL}/api/approve?id=${requestId}&type=${approverType.toLowerCase()}&status=rejected`,
-  };
-
-  const approveLink = `${process.env.CLIENT_URL}/api/approve?id=${requestId}&type=ed&status=approved`;
+  // Links for Plant Head (ED)
+  const approveLink = `${process.env.CLIENT_URL}/ed_approve.html?id=${requestId}&type=ed`;
   const rejectLink = `${process.env.CLIENT_URL}/ed_reject.html?id=${requestId}&type=ed`;
+  // Login links for other approvers
+  const loginLink = `${process.env.CLIENT_URL}/${approverType.toLowerCase()}_login.html`;
 
   return `
     <div style="font-family: 'Segoe UI', sans-serif; background-color: #f5f7fa; padding: 40px;">
@@ -59,15 +57,17 @@ const generateMailHTML = (requestData, requestId, approverType) => {
           You are requested to review and verify before responding to this request using the options below:
         </p>
         <div style="margin: 25px 0;">
-          ${isActioned
-      ? `<p style="color: #dc3545; font-weight: bold;">This request has already been ${statusValue} by ${approverType}.</p>`
-      : approverType.toLowerCase() === 'ed' ? `
-              <a href="${approveLink}" style="display: inline-block; margin-right: 10px; padding: 12px 22px; background-color: #28a745; color: #ffffff; text-decoration: none; border-radius: 5px;">Approve</a>
-              <a href="${rejectLink}" style="display: inline-block; padding: 12px 22px; background-color: #dc3545; color: #ffffff; text-decoration: none; border-radius: 5px;">Reject</a>
-            ` : `
-              <a href="${process.env.CLIENT_URL}/${approverType.toLowerCase()}_login.html" style="display: inline-block; padding: 12px 22px; background-color: #007bff; color: #ffffff; text-decoration: none; border-radius: 5px;">Go to ${approverType} Login</a>
-            `
-    }
+          ${isActioned 
+            ? `<p style="color: #dc3545; font-weight: bold;">This request has already been ${statusValue} by ${approverType=="ed"?"Plant Head":approverType.toUpperCase()}.</p>`
+            : approverType.toLowerCase() === 'ed' 
+              ? `
+                <a href="${approveLink}" style="display: inline-block; margin-right: 10px; padding: 12px 22px; background-color: #28a745; color: #ffffff; text-decoration: none; border-radius: 5px;">Approve</a>
+                <a href="${rejectLink}" style="display: inline-block; padding: 12px 22px; background-color: #dc3545; color: #ffffff; text-decoration: none; border-radius: 5px;">Reject</a>
+              `
+              : `
+                <a href="${loginLink}" style="display: inline-block; padding: 12px 22px; background-color: #007bff; color: #ffffff; text-decoration: none; border-radius: 5px;">Go to ${approverType.toUpperCase()} Login</a>
+              `
+          }
         </div>
       </div>
     </div>

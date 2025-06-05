@@ -8,7 +8,7 @@ function getQueryParams() {
   return params;
 }
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
   const params = getQueryParams();
   const requestId = params.id;
   const type = params.type;
@@ -16,6 +16,38 @@ document.addEventListener("DOMContentLoaded", () => {
   const form = document.getElementById("rejectForm");
   const commentInput = document.getElementById("comment");
   const messageDiv = document.getElementById("message");
+
+  // Check request status first
+  try {
+    const statusResponse = await fetch(`http://localhost:5000/api/request/${requestId}`);
+    if (!statusResponse.ok) {
+      throw new Error("Failed to fetch request status");
+    }
+    const requestData = await statusResponse.json();
+    
+    // Check if request is already actioned by ED
+    if (requestData.status_ed !== "pending") {
+      // Show already actioned message
+      form.style.display = "none";
+      messageDiv.innerHTML = `
+        <div class="alert alert-warning">
+          <h4>Request Already Processed</h4>
+          <p>This request has already been ${requestData.status_ed} by Plant Head.</p>
+          <p>Comment: ${requestData.comments_ed || "No comment provided"}</p>
+        </div>
+      `;
+      return;
+    }
+  } catch (error) {
+    messageDiv.innerHTML = `
+      <div class="alert alert-danger">
+        <h4>Error</h4>
+        <p>${error.message}</p>
+      </div>
+    `;
+    form.style.display = "none";
+    return;
+  }
 
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
@@ -34,34 +66,18 @@ document.addEventListener("DOMContentLoaded", () => {
     submitButton.textContent = "Submitting...";
 
     try {
-      const response = await fetch(`http://localhost:5000/api/requests/${requestId}/status`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          status: "rejected",
-          role: type,
-          comment: comment,
-        }),
+      const response = await fetch(`http://localhost:5000/api/approve?id=${requestId}&type=${type}&status=rejected&comment=${encodeURIComponent(comment)}`, {
+        method: "GET"
       });
 
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || "Failed to submit rejection");
+        const errorText = await response.text();
+        throw new Error(errorText || "Failed to submit rejection");
       }
 
-      messageDiv.textContent = "Request rejected successfully.";
-      messageDiv.style.color = "green";
+      const responseHtml = await response.text();
+      document.body.innerHTML = responseHtml;
 
-      // Disable form after success
-      commentInput.disabled = true;
-      submitButton.disabled = true;
-      
-      // Redirect to a confirmation or home page after rejection
-      setTimeout(() => {
-        window.location.href = "/"; // Adjust the URL as needed
-      }, 2000);
     } catch (error) {
       messageDiv.textContent = error.message;
       messageDiv.style.color = "red";
